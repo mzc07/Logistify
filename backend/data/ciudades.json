@@ -1,0 +1,40 @@
+{
+  "ciudades": [
+    "Bogotá",
+    "Medellín",
+    "Cali",
+    "Bucaramanga",
+    "Cúcuta",
+    "Barranquilla",
+    "Cartagena",
+    "Pasto",
+    "Pereira",
+    "Manizales"
+  ],
+  "rutas": [
+    { "origen": "Bogotá",      "destino": "Medellín",     "peso": 420 },
+    { "origen": "Medellín",    "destino": "Bogotá",        "peso": 420 },
+    { "origen": "Bogotá",      "destino": "Bucaramanga",   "peso": 390 },
+    { "origen": "Bucaramanga", "destino": "Bogotá",        "peso": 390 },
+    { "origen": "Bogotá",      "destino": "Cali",          "peso": 460 },
+    { "origen": "Cali",        "destino": "Bogotá",        "peso": 460 },
+    { "origen": "Medellín",    "destino": "Cali",          "peso": 260 },
+    { "origen": "Cali",        "destino": "Medellín",      "peso": 260 },
+    { "origen": "Medellín",    "destino": "Barranquilla",  "peso": 690 },
+    { "origen": "Barranquilla","destino": "Medellín",      "peso": 690 },
+    { "origen": "Bucaramanga", "destino": "Cúcuta",        "peso": 200 },
+    { "origen": "Cúcuta",      "destino": "Bucaramanga",   "peso": 200 },
+    { "origen": "Barranquilla","destino": "Cartagena",     "peso": 120 },
+    { "origen": "Cartagena",   "destino": "Barranquilla",  "peso": 120 },
+    { "origen": "Cali",        "destino": "Pasto",         "peso": 230 },
+    { "origen": "Pasto",       "destino": "Cali",          "peso": 230 },
+    { "origen": "Medellín",    "destino": "Pereira",       "peso": 180 },
+    { "origen": "Pereira",     "destino": "Medellín",      "peso": 180 },
+    { "origen": "Pereira",     "destino": "Manizales",     "peso": 50  },
+    { "origen": "Manizales",   "destino": "Pereira",       "peso": 50  },
+    { "origen": "Manizales",   "destino": "Bogotá",        "peso": 280 },
+    { "origen": "Bogotá",      "destino": "Manizales",     "peso": 280 },
+    { "origen": "Bucaramanga", "destino": "Barranquilla",  "peso": 490 },
+    { "origen": "Barranquilla","destino": "Bucaramanga",   "peso": 490 }
+  ]
+}

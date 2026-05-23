@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚚 Logistify — Centro de Operaciones</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;500;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ══ SCAN LINE OVERLAY ══════════════════════════════════════════════════ -->
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- ══ HEADER ═══════════════════════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo-wrap">
+      <svg class="header-logo-icon" viewBox="0 0 36 24" fill="none">
+        <rect x="0" y="8" width="22" height="14" rx="1" fill="currentColor" opacity=".9"/>
+        <polygon points="22,8 36,8 36,22 22,22" fill="currentColor" opacity=".65"/>
+        <circle cx="7" cy="22" r="3.5" fill="#0d0e11" stroke="currentColor" stroke-width="2"/>
+        <circle cx="18" cy="22" r="3.5" fill="#0d0e11" stroke="currentColor" stroke-width="2"/>
+        <circle cx="30" cy="22" r="3.5" fill="#0d0e11" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </div>
+    <div>
+      <h1 class="header-title">LOGISTIFY</h1>
+      <p class="header-sub">Sistema de Gestión Logística · v1.0</p>
+    </div>
+  </div>
+
+  <div class="header-pulse">
+    <span class="pulse-dot"></span>
+    <span class="pulse-label">SISTEMA ACTIVO</span>
+  </div>
+
+  <div class="header-stats">
+    <div class="stat-pill" id="stat-total">
+      <span class="stat-num" id="num-total">—</span>
+      <span class="stat-label">PAQUETES</span>
+    </div>
+    <div class="stat-pill urgent">
+      <span class="stat-num" id="num-urgentes">—</span>
+      <span class="stat-label">URGENTES</span>
+    </div>
+    <div class="stat-pill transit">
+      <span class="stat-num" id="num-transito">—</span>
+      <span class="stat-label">EN TRÁNSITO</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN GRID ════════════════════════════════════════════════════════════ -->
+<main class="grid">
+
+  <!-- ── COLUMNA IZQUIERDA ──────────────────────────────────────────────── -->
+  <aside class="panel panel-form">
+    <div class="panel-header">
+      <span class="panel-tag">POST /paquetes</span>
+      <h2 class="panel-title">NUEVO ENVÍO</h2>
+    </div>
+
+    <div class="form-body" id="form-crear">
+      <div class="field">
+        <label>CIUDAD ORIGEN</label>
+        <div class="select-wrap">
+          <select id="input-origen"><option value="">— seleccionar —</option></select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>CIUDAD DESTINO</label>
+        <div class="select-wrap">
+          <select id="input-destino"><option value="">— seleccionar —</option></select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>DESCRIPCIÓN</label>
+        <input type="text" id="input-desc" placeholder="Ej: Laptop Dell XPS 15" maxlength="80"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>PESO (kg)</label>
+          <input type="number" id="input-peso" placeholder="2.5" min="0.1" step="0.1"/>
+        </div>
+        <div class="field">
+          <label>PRIORIDAD</label>
+          <div class="select-wrap">
+            <select id="input-prioridad">
+              <option value="alta">🔴 ALTA</option>
+              <option value="media" selected>🟡 MEDIA</option>
+              <option value="baja">🟢 BAJA</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" id="btn-crear" onclick="crearPaquete()">
+        <span class="btn-icon">⟢</span>
+        CALCULAR RUTA + CREAR
+      </button>
+    </div>
+
+    <!-- Resultado de ruta -->
+    <div class="ruta-result hidden" id="ruta-result">
+      <div class="ruta-header">
+        <span class="ruta-label">RUTA ÓPTIMA · DIJKSTRA</span>
+        <span class="ruta-km" id="ruta-km">— km</span>
+      </div>
+      <div class="ruta-path" id="ruta-path"></div>
+      <div class="ruta-footer">
+        <div class="ruta-id">ID: <strong id="ruta-id-value">—</strong></div>
+        <button class="btn-simular" id="btn-simular" onclick="simularEnvio()">
+          ▶ SIMULAR ENVÍO
+        </button>
+      </div>
+    </div>
+
+    <!-- Búsqueda BST -->
+    <div class="panel-divider"></div>
+    <div class="panel-header">
+      <span class="panel-tag">GET /paquetes/{id} · BST</span>
+      <h2 class="panel-title">BUSCAR POR ID</h2>
+    </div>
+    <div class="search-row">
+      <input type="text" id="input-buscar" placeholder="PKG001..." maxlength="8"
+             onkeydown="if(event.key==='Enter') buscarPaquete()" />
+      <button class="btn-secondary" onclick="buscarPaquete()">↵ BUSCAR</button>
+    </div>
+    <div class="search-result hidden" id="search-result"></div>
+  </aside>
+
+  <!-- ── COLUMNA CENTRAL — GRAFO ────────────────────────────────────────── -->
+  <section class="panel panel-grafo">
+    <div class="panel-header">
+      <span class="panel-tag">GET /grafo · Cytoscape.js</span>
+      <h2 class="panel-title">RED DE RUTAS</h2>
+      <div class="grafo-controls">
+        <button class="btn-graph-control" onclick="cy && cy.fit()" title="Ajustar vista">⊡</button>
+        <button class="btn-graph-control" onclick="limpiarRutaGrafo()" title="Limpiar ruta">✕</button>
+      </div>
+    </div>
+    <div id="cy-container">
+      <div id="cy"></div>
+
+      <!-- Overlay de simulación sobre el grafo -->
+      <div class="sim-overlay hidden" id="sim-overlay">
+        <div class="sim-truck" id="sim-truck">🚚</div>
+      </div>
+
+      <div class="cy-legend">
+        <span class="legend-item"><span class="dot default"></span> Ciudad</span>
+        <span class="legend-item"><span class="dot dot-origen"></span> Origen</span>
+        <span class="legend-item"><span class="dot dot-destino"></span> Destino</span>
+        <span class="legend-item"><span class="dot ruta-highlight"></span> Ruta activa</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COLUMNA DERECHA — TABLA ────────────────────────────────────────── -->
+  <section class="panel panel-tabla">
+    <div class="panel-header">
+      <span class="panel-tag">GET /paquetes · Min-Heap</span>
+      <h2 class="panel-title">COLA DE PAQUETES</h2>
+    </div>
+
+    <div class="tabla-toolbar">
+      <span class="orden-badge">⬆ Ordenados por prioridad</span>
+      <div class="toolbar-actions">
+        <button class="btn-despachar-todos" id="btn-despachar-todos" onclick="despacharTodosPorPrioridad()" title="Despachar todos los pendientes en orden de prioridad">
+          <span>⚡</span> DESPACHAR TODOS
+        </button>
+        <button class="btn-refresh" onclick="cargarPaquetes()" title="Actualizar">⟳</button>
+      </div>
+    </div>
+
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>RUTA</th>
+            <th>PRIORIDAD</th>
+            <th>ESTADO</th>
+            <th>KM</th>
+            <th>ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr><td colspan="6" class="tabla-empty tabla-loading">
+            <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            Cargando
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ MODAL DESPACHO MASIVO ════════════════════════════════════════════════ -->
+<div class="modal-batch hidden" id="modal-batch">
+  <div class="modal-batch-header">
+    <div>
+      <span class="modal-tag">DESPACHO MASIVO</span>
+      <p class="modal-batch-sub">Procesando pedidos por prioridad</p>
+    </div>
+    <button class="modal-close" id="btn-close-batch" onclick="cerrarBatch()">✕</button>
+  </div>
+
+  <div class="batch-overview">
+    <div class="batch-stat">
+      <span class="batch-stat-num" id="batch-total">0</span>
+      <span class="batch-stat-label">TOTAL</span>
+    </div>
+    <div class="batch-stat procesando">
+      <span class="batch-stat-num" id="batch-actual">0</span>
+      <span class="batch-stat-label">ACTUAL</span>
+    </div>
+    <div class="batch-stat completado">
+      <span class="batch-stat-num" id="batch-completados">0</span>
+      <span class="batch-stat-label">DESPACHADOS</span>
+    </div>
+    <div class="batch-stat pendiente">
+      <span class="batch-stat-num" id="batch-restantes">0</span>
+      <span class="batch-stat-label">RESTANTES</span>
+    </div>
+  </div>
+
+  <!-- Barra de progreso global -->
+  <div class="batch-global-bar">
+    <div class="batch-global-fill" id="batch-global-fill"></div>
+    <span class="batch-global-pct" id="batch-global-pct">0%</span>
+  </div>
+
+  <!-- Cola de paquetes -->
+  <div class="batch-queue" id="batch-queue"></div>
+
+  <!-- Info del envío activo -->
+  <div class="batch-active-wrap">
+    <div class="batch-active-header">
+      <span class="batch-active-label">EN PROCESO</span>
+      <span class="batch-active-id" id="batch-active-id">—</span>
+    </div>
+    <div class="batch-route-bar" id="batch-route-bar"></div>
+    <div class="batch-active-sub" id="batch-active-sub">Esperando inicio...</div>
+  </div>
+
+  <div class="modal-batch-footer">
+    <button class="btn-batch-cancel hidden" id="btn-batch-cancel" onclick="cancelarBatch()">
+      ✕ CANCELAR
+    </button>
+    <button class="btn-batch-start" id="btn-batch-start" onclick="iniciarBatch()">
+      ⚡ INICIAR DESPACHO
+    </button>
+  </div>
+</div>
+
+<!-- ══ MODAL DE SIMULACIÓN ══════════════════════════════════════════════════ -->
+<div class="modal-backdrop hidden" id="modal-backdrop"></div>
+<div class="modal-sim hidden" id="modal-sim">
+  <div class="modal-sim-header">
+    <span class="modal-tag">SIMULACIÓN DE ENVÍO</span>
+    <button class="modal-close" onclick="cerrarSimulacion()">✕</button>
+  </div>
+  <div class="modal-sim-body">
+    <div class="sim-progress-wrap">
+      <div class="sim-route-visual" id="sim-route-visual"></div>
+      <div class="sim-progress-bar">
+        <div class="sim-progress-fill" id="sim-progress-fill"></div>
+      </div>
+    </div>
+    <div class="sim-status-wrap">
+      <div class="sim-status-icon" id="sim-status-icon">🚚</div>
+      <div class="sim-status-text">
+        <div class="sim-status-label" id="sim-status-label">LISTO PARA DESPACHAR</div>
+        <div class="sim-status-detail" id="sim-status-detail">Presiona INICIAR para comenzar la simulación</div>
+      </div>
+    </div>
+    <div class="sim-cities-list" id="sim-cities-list"></div>
+  </div>
+  <div class="modal-sim-footer">
+    <button class="btn-sim-start" id="btn-sim-start" onclick="iniciarSimulacion()">
+      ▶ INICIAR SIMULACIÓN
+    </button>
+  </div>
+</div>
+
+<!-- ══ TOAST ════════════════════════════════════════════════════════════════ -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
