@@ -1,21 +1,21 @@
-# 🚚 Logistify — Gestor de Logística Simulado
+# Logistify — Gestor de Logística Simulado
 
 > Sistema académico de gestión de paquetes y rutas de envío que utiliza **estructuras de datos clásicas**: Grafos, Min-Heap, BST y Cola FIFO, con visualización interactiva.
 
 ---
 
-## ✨ Features
+## Features
 
-- 📦 Crear y rastrear paquetes con origen, destino y prioridad
-- 🗺️ Cálculo automático de ruta más corta (Algoritmo de Dijkstra)
-- 🔍 Búsqueda eficiente de paquetes por ID (Árbol BST)
-- 📊 Cola de prioridad para gestión de urgencias (Min-Heap)
-- 🌐 Visualización interactiva del grafo de rutas (Cytoscape.js)
-- 💾 Persistencia con SQLite (sin instalación extra)
+- Crear y rastrear paquetes con origen, destino y prioridad
+- Cálculo automático de ruta más corta (Algoritmo de Dijkstra)
+- Búsqueda eficiente de paquetes por ID (Árbol BST)
+- Cola de prioridad para gestión de urgencias (Min-Heap)
+- Visualización interactiva del grafo de rutas (Cytoscape.js)
+- Persistencia con SQLite (sin instalación extra)
 
 ---
 
-## 🧠 Estructuras de Datos Utilizadas
+## Estructuras de Datos Utilizadas
 
 | Estructura | Uso en el Sistema | Complejidad clave |
 |---|---|---|
@@ -27,7 +27,7 @@
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Backend**: Python 3.11 + FastAPI
 - **Base de datos**: SQLite (sin instalación extra)
@@ -36,7 +36,7 @@
 
 ---
 
-## 🚀 Instalación y Uso
+## Instalación y Uso
 
 ### Prerrequisitos
 - Python 3.11+
@@ -67,7 +67,7 @@ La documentación interactiva Swagger estará en: **http://localhost:8000/docs**
 
 ---
 
-## 🧪 Tests
+## Tests
 
 ```bash
 cd backend
@@ -90,7 +90,7 @@ tests/test_bst.py::test_inorden_ordenado            PASSED
 
 ---
 
-## 📡 Endpoints de la API
+## Endpoints de la API
 
 | Método | Endpoint | Descripción | Estructura usada |
 |---|---|---|---|
@@ -106,7 +106,7 @@ tests/test_bst.py::test_inorden_ordenado            PASSED
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 logistify/
@@ -135,7 +135,7 @@ logistify/
 
 ---
 
-## 💡 Notas Académicas
+## Notas Académicas
 
 **¿Por qué BST puede desbalancearse?**
 Si los IDs se insertan en orden, el BST degenera a O(n). La mejora natural sería un **AVL Tree** o un **Red-Black Tree**, pero para este proyecto el BST simple es correcto y funcional.
