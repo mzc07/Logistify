@@ -2,6 +2,10 @@
 
 > Sistema académico de gestión de paquetes y rutas de envío que utiliza **estructuras de datos clásicas**: Grafos, Min-Heap, BST y Cola FIFO, con visualización interactiva.
 
+
+- **Martin Ariza** (2251516)
+- **Ivanna Alvarez** (2251805)
+- **Juliana Rueda** (2251801)
 ---
 
 ## Features
