@@ -6,7 +6,14 @@
 - **Martin Ariza** (2251516)
 - **Ivanna Alvarez** (2251805)
 - **Juliana Rueda** (2251801)
+- **Yarilis Garcia** (225212)
+- **Shiloh Martinez** 2251905
 ---
+
+## Entregas
+- [Consulta inicial](https://trabajo-equipo-uisflorida.notion.site/Consulta-inicial-LOGISTIFY-2ff4fd1a1844813bb829ed0b97462f1e?pvs=74)
+- [Primer entrega](https://trabajo-equipo-uisflorida.notion.site/Primera-Entrega-3184fd1a184480e3a884d8fb46e47eee?pvs=74)
+- [Segunda entrega](https://www.notion.so/trabajo-equipo-uisflorida/Segunda-Entrega-34c4fd1a18448030bce4c1b0038f2f27)
 
 ## Features
 
