@@ -6,8 +6,8 @@
 - **Martin Ariza** (2251516)
 - **Ivanna Alvarez** (2251805)
 - **Juliana Rueda** (2251801)
-- **Yarilis Garcia** (225212)
-- **Shiloh Martinez** 2251905
+- **Yarilis Garcia** (2252121)
+- **Shiloh Martinez** (2251905)
 ---
 
 ## Entregas
